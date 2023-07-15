@@ -23,6 +23,8 @@ namespace Halo5Reqs
 		private static readonly MethodInfo s_listViewSetItemState =
 			typeof(ListView).GetMethod("SetItemState", BindingFlags.NonPublic | BindingFlags.Instance);
 
+		private readonly ILogger _logger;
+
 		private readonly Halo5ApiClient _halo5ApiClient;
 		private readonly PacksApiClient _packsApiClient;
 
@@ -46,8 +48,10 @@ namespace Halo5Reqs
 
 		private Queue<(Req, ListViewItem)> _reqImageQueue;
 
-		public MainForm(String token, String gamertag)
+		public MainForm(ILogger logger, String token, String gamertag)
 		{
+			_logger = logger;
+
 			_halo5ApiClient = new Halo5ApiClient(token);
 			_packsApiClient = new PacksApiClient(token, gamertag, _halo5ApiClient);
 
@@ -111,17 +115,23 @@ namespace Halo5Reqs
 
 		private async void openPackButton_Click(Object sender, EventArgs e)
 		{
-			this.packTreeView.SelectedNode.Text += " (opened)";
-			_selectedPackInstance.CanBeOpened = false;
-			this.openPackButton.Enabled = false;
-			await _packsApiClient.OpenPackAsync(_selectedPackType, _selectedPackInstance);
+			PackType packType = _selectedPackType;
+			PackInstance packInstance = _selectedPackInstance;
 
-			foreach (CardInstance cardInstance in _selectedPackInstance.CardInstances)
+			_logger.Log($"Opening {packType.Name} ({packType.Id}/{packInstance.Id})");
+
+			this.packTreeView.SelectedNode.Text += " (opened)";
+			packInstance.CanBeOpened = false;
+			this.openPackButton.Enabled = false;
+			await _packsApiClient.OpenPackAsync(packType, packInstance);
+
+			foreach (CardInstance cardInstance in packInstance.CardInstances)
 			{
+				String reqId = cardInstance.ReqId;
+				_logger.Log($"  {_reqsById[reqId].Name} ({reqId}/{cardInstance.Id})");
+
 				if (!cardInstance.Consumed)
 				{
-					String reqId = cardInstance.ReqId;
-
 					if (_cardsByReqId.TryGetValue(reqId, out Card card))
 					{
 						card.Unconsumed++;
@@ -133,6 +143,8 @@ namespace Halo5Reqs
 					}
 				}
 			}
+
+			_logger.Log("");
 
 			this.PopulatePackListView();
 			this.PopulateReqTreeView(); // Update counts.
@@ -219,6 +231,7 @@ namespace Halo5Reqs
 				return;
 			}
 
+			_logger.Log($"Selling {req.Name} ({req.Id})");
 			this.sellButton.Enabled = false;
 			Card card = _cardsByReqId[req.Id];
 			PackInstance packInstance = _selectedCardInstance != null ? _selectedPackInstance : null;
@@ -228,6 +241,8 @@ namespace Halo5Reqs
 
 			if (cardInstanceId != null) // Was a card actually sold?
 			{
+				_logger.Log($"  Instance {cardInstanceId}");
+
 				if (cardInstance == null)
 				{
 					// Check whether the card instance is from a recently opened pack:
@@ -243,6 +258,10 @@ namespace Halo5Reqs
 				{
 					cardInstance.Consumed = true;
 				}
+			}
+			else
+			{
+				_logger.Log("  NO CARD SOLD");
 			}
 
 			if (card.Unconsumed > 0)

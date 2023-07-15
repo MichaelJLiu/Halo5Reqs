@@ -77,6 +77,8 @@
     <Compile Include="Api\Req.cs" />
     <Compile Include="Api\ReqCategory.cs" />
     <Compile Include="Api\ReqSubCategory.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -10,8 +10,11 @@ namespace Halo5Reqs
 {
 	public partial class LoginForm : Form
 	{
-		public LoginForm()
+		private readonly ILogger _logger;
+
+		public LoginForm(ILogger logger)
 		{
+			_logger = logger;
 			this.InitializeComponent();
 		}
 
@@ -39,8 +42,10 @@ namespace Halo5Reqs
 				if (tokenCookie != null)
 				{
 					String token = Uri.UnescapeDataString(tokenCookie.Value);
+					_logger.Log($"X-343-Authorization-Spartan: {token}");
+					_logger.Log("");
 					String gamertag = await new ProfileApiClient(token).GetGamertag();
-					this.MainForm = new MainForm(token, gamertag);
+					this.MainForm = new MainForm(_logger, token, gamertag);
 					this.MainForm.Show();
 					this.MainForm.Focus();
 					this.DialogResult = DialogResult.OK;

@@ -14,15 +14,18 @@ namespace Halo5Reqs
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			MainForm mainForm;
-			using (LoginForm form = new LoginForm())
+			using (Logger logger = new Logger())
 			{
-				if (form.ShowDialog() != DialogResult.OK)
-					return;
-				mainForm = form.MainForm;
-			}
+				MainForm mainForm;
+				using (LoginForm form = new LoginForm(logger))
+				{
+					if (form.ShowDialog() != DialogResult.OK)
+						return;
+					mainForm = form.MainForm;
+				}
 
-			Application.Run(mainForm);
+				Application.Run(mainForm);
+			}
 		}
 	}
 }
