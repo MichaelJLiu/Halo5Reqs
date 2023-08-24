@@ -148,7 +148,6 @@ namespace Halo5Reqs
 
 			this.PopulatePackListView();
 			this.PopulateReqTreeView(); // Update counts.
-			this.reqTreeView.SelectedNode = this.reqTreeView.Nodes[0];
 		}
 
 		private async void buyPackButton_Click(Object sender, EventArgs e)
@@ -234,8 +233,9 @@ namespace Halo5Reqs
 			_logger.Log($"Selling {req.Name} ({req.Id})");
 			this.sellButton.Enabled = false;
 			Card card = _cardsByReqId[req.Id];
-			PackInstance packInstance = _selectedCardInstance != null ? _selectedPackInstance : null;
-			CardInstance cardInstance = _selectedCardInstance;
+			(PackInstance packInstance, CardInstance cardInstance) = _selectedCardInstance != null && !_selectedCardInstance.Consumed
+				? (_selectedPackInstance, _selectedCardInstance)
+				: (null, null);
 			String cardInstanceId = await _packsApiClient.SellCardAsync(
 				req, card, cardInstance?.Id, _settings.MinReqCount);
 
@@ -274,41 +274,44 @@ namespace Halo5Reqs
 				this.ShowUnconsumed(null);
 			}
 
-			if (packInstance != null && packInstance == _selectedPackInstance)
+			foreach (ListViewItem item in this.packListView.Items)
 			{
-				foreach (ListViewItem item in this.packListView.Items)
+				CardInstance itemCardInstance = (CardInstance)item.Tag;
+
+				if (itemCardInstance.ReqId == req.Id)
 				{
-					if (item.Tag == cardInstance)
+					if (itemCardInstance == cardInstance)
 					{
-						this.SetOverlayImage(this.packListView, item, 0);
 						this.SetCutStyle(this.packListView, item);
-						break;
 					}
+
+					this.SetOverlayImage(
+						this.packListView, item,
+						card.Unconsumed > _settings.MinReqCount
+							? Math.Min(card.Unconsumed, 10)
+							: 0);
 				}
 			}
-			else if (card.Unconsumed <= _settings.MinReqCount &&
-				this.packListView.Items.Cast<ListViewItem>().Any(item => ((CardInstance)item.Tag).ReqId == req.Id))
-			{
-				this.PopulatePackListView(); // Update the unconsumed status of all equivalent reqs.
-			}
 
-			if (card.Unconsumed <= _settings.MinReqCount)
+			foreach (ListViewItem item in this.reqListView.Items)
 			{
-				foreach (ListViewItem item in this.reqListView.Items)
+				if (item.Tag == req)
 				{
-					if (item.Tag == req)
+					if (card.Unconsumed > _settings.MinReqCount)
 					{
-						if (card.Unconsumed > 0)
-						{
-							this.SetOverlayImage(this.reqListView, item, 0);
-						}
-						else
+						this.SetOverlayImage(this.reqListView, item, Math.Min(card.Unconsumed, 10));
+					}
+					else
+					{
+						this.SetOverlayImage(this.reqListView, item, 0);
+
+						if (card.Unconsumed == 0)
 						{
 							this.SetCutStyle(this.reqListView, item);
 						}
-
-						break;
 					}
+
+					break;
 				}
 			}
 		}
@@ -413,21 +416,15 @@ namespace Halo5Reqs
 					item.Tag = cardInstance;
 					item.SubItems.Add(req.Rarity.Id);
 
-					if (cardInstance.Consumed)
+					if (cardInstance.Consumed && req.SellPrice != null)
 					{
-						if (req.SellPrice != null)
-						{
-							this.SetCutStyle(this.packListView, item);
-						}
+						this.SetCutStyle(this.packListView, item);
 					}
-					else
-					{
-						Card card = _cardsByReqId[req.Id];
 
-						if (_settings.MinReqCount > 0 && card.Unconsumed > _settings.MinReqCount)
-						{
-							this.SetOverlayImage(this.packListView, item, Math.Min(card.Unconsumed, 10));
-						}
+					if (_cardsByReqId.TryGetValue(req.Id, out Card card) &&
+						card.Unconsumed > _settings.MinReqCount)
+					{
+						this.SetOverlayImage(this.packListView, item, Math.Min(card.Unconsumed, 10));
 					}
 
 					if (this.reqImageList.Images.ContainsKey(req.Id))
@@ -530,7 +527,7 @@ namespace Halo5Reqs
 
 					if (_cardsByReqId.TryGetValue(req.Id, out Card card))
 					{
-						if (_settings.MinReqCount > 0 && card.Unconsumed > _settings.MinReqCount)
+						if (card.Unconsumed > _settings.MinReqCount)
 						{
 							this.SetOverlayImage(this.reqListView, item, Math.Min(card.Unconsumed, 10));
 						}
