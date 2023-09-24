@@ -9,8 +9,10 @@ namespace Halo5Reqs
 
 		public Logger()
 		{
-			String path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Halo5Reqs\\log.txt");
-			FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
+			String logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Halo5Reqs");
+			Directory.CreateDirectory(logDirectory);
+			String logFilePath = Path.Combine(logDirectory, "log.txt");
+			FileStream stream = new FileStream(logFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
 			_writer = new StreamWriter(stream);
 		}
 
