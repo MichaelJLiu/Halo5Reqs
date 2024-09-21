@@ -266,12 +266,19 @@ namespace Halo5Reqs
 
 			if (card.Unconsumed > 0)
 			{
-				this.ShowUnconsumed(card);
+				if (req == _selectedReq)
+				{
+					this.ShowUnconsumed(card);
+				}
 			}
 			else
 			{
 				_cardsByReqId.Remove(req.Id);
-				this.ShowUnconsumed(null);
+
+				if (req == _selectedReq)
+				{
+					this.ShowUnconsumed(null);
+				}
 			}
 
 			foreach (ListViewItem item in this.packListView.Items)
