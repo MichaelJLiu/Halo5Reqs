@@ -51,7 +51,7 @@ namespace Halo5Reqs.Api
 		{
 			return new PackInstance(
 				(String)packInstanceData["Id"],
-				(DateTime)packInstanceData["AcquiredDateUtc"]["ISO8601Date"],
+				(DateTimeOffset)packInstanceData["AcquiredDateUtc"]["ISO8601Date"],
 				(String)packInstanceData.SelectToken("GiftSender.Gamertag"),
 				(Boolean)packInstanceData["CanBeOpened"]);
 		}

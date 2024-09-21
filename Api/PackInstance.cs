@@ -4,7 +4,7 @@ namespace Halo5Reqs.Api
 {
 	public class PackInstance
 	{
-		public PackInstance(String id, DateTime acquiredDateTime, String giftSender, Boolean canBeOpened)
+		public PackInstance(String id, DateTimeOffset acquiredDateTime, String giftSender, Boolean canBeOpened)
 		{
 			this.Id = id;
 			this.AcquiredDateTime = acquiredDateTime;
@@ -14,7 +14,7 @@ namespace Halo5Reqs.Api
 
 		public String Id { get; }
 
-		public DateTime AcquiredDateTime { get; }
+		public DateTimeOffset AcquiredDateTime { get; }
 
 		public String GiftSender { get; }
 
@@ -24,7 +24,7 @@ namespace Halo5Reqs.Api
 
 		public override String ToString()
 		{
-			return this.AcquiredDateTime.ToLocalTime().ToShortDateString() +
+			return this.AcquiredDateTime.ToOffset(TimeSpan.Zero).AddHours(-15).ToString("d") +
 				(this.GiftSender != null ? " from " + this.GiftSender : null);
 		}
 	}
