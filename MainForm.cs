@@ -596,6 +596,8 @@ namespace Halo5Reqs
 
 			if (req != null)
 			{
+				this.certificationPictureBox.Visible =
+					req.CertificationId != null && _cardsByReqId.ContainsKey(req.CertificationId);
 				this.reqNameLabel.Text = req.Name;
 				this.reqDescriptionLabel.Text = req.Description;
 

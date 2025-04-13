@@ -29,11 +29,12 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			this.reqImageList = new System.Windows.Forms.ImageList(this.components);
 			this.tabControl = new System.Windows.Forms.TabControl();
 			this.packsTabPage = new System.Windows.Forms.TabPage();
-			this.openPackButton = new System.Windows.Forms.Button();
 			this.packListView = new System.Windows.Forms.ListView();
-			this.reqImageList = new System.Windows.Forms.ImageList(this.components);
+			this.buyPackButton = new System.Windows.Forms.Button();
+			this.openPackButton = new System.Windows.Forms.Button();
 			this.packTypePictureBox = new System.Windows.Forms.PictureBox();
 			this.packTreeView = new System.Windows.Forms.TreeView();
 			this.reqsTabPage = new System.Windows.Forms.TabPage();
@@ -43,23 +44,30 @@
 			this.reqTreeView = new System.Windows.Forms.TreeView();
 			this.reqPanel = new System.Windows.Forms.Panel();
 			this.sellButton = new System.Windows.Forms.Button();
+			this.unconsumedLabel2 = new System.Windows.Forms.Label();
 			this.unconsumedLabel = new System.Windows.Forms.Label();
 			this.priceLabel2 = new System.Windows.Forms.Label();
-			this.unconsumedLabel2 = new System.Windows.Forms.Label();
 			this.priceLabel = new System.Windows.Forms.Label();
 			this.reqFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.certificationPictureBox = new System.Windows.Forms.PictureBox();
 			this.reqNameLabel = new System.Windows.Forms.Label();
 			this.reqDescriptionLabel = new System.Windows.Forms.Label();
 			this.reqPictureBox = new System.Windows.Forms.PictureBox();
-			this.buyPackButton = new System.Windows.Forms.Button();
 			this.tabControl.SuspendLayout();
 			this.packsTabPage.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.packTypePictureBox)).BeginInit();
 			this.reqsTabPage.SuspendLayout();
 			this.reqPanel.SuspendLayout();
 			this.reqFlowLayoutPanel.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.certificationPictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.reqPictureBox)).BeginInit();
 			this.SuspendLayout();
+			// 
+			// reqImageList
+			// 
+			this.reqImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+			this.reqImageList.ImageSize = new System.Drawing.Size(94, 130);
+			this.reqImageList.TransparentColor = System.Drawing.Color.Transparent;
 			// 
 			// tabControl
 			// 
@@ -77,9 +85,9 @@
 			// 
 			// packsTabPage
 			// 
+			this.packsTabPage.Controls.Add(this.packListView);
 			this.packsTabPage.Controls.Add(this.buyPackButton);
 			this.packsTabPage.Controls.Add(this.openPackButton);
-			this.packsTabPage.Controls.Add(this.packListView);
 			this.packsTabPage.Controls.Add(this.packTypePictureBox);
 			this.packsTabPage.Controls.Add(this.packTreeView);
 			this.packsTabPage.Location = new System.Drawing.Point(4, 25);
@@ -89,18 +97,6 @@
 			this.packsTabPage.TabIndex = 0;
 			this.packsTabPage.Text = "Packs";
 			this.packsTabPage.UseVisualStyleBackColor = true;
-			// 
-			// openPackButton
-			// 
-			this.openPackButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.openPackButton.Location = new System.Drawing.Point(35, 523);
-			this.openPackButton.Name = "openPackButton";
-			this.openPackButton.Size = new System.Drawing.Size(187, 40);
-			this.openPackButton.TabIndex = 9;
-			this.openPackButton.Text = "&Open Req Pack";
-			this.openPackButton.UseVisualStyleBackColor = true;
-			this.openPackButton.Visible = false;
-			this.openPackButton.Click += new System.EventHandler(this.openPackButton_Click);
 			// 
 			// packListView
 			// 
@@ -114,16 +110,34 @@
 			this.packListView.MultiSelect = false;
 			this.packListView.Name = "packListView";
 			this.packListView.Size = new System.Drawing.Size(600, 565);
-			this.packListView.TabIndex = 1;
+			this.packListView.TabIndex = 4;
 			this.packListView.UseCompatibleStateImageBehavior = false;
 			this.packListView.SelectedIndexChanged += new System.EventHandler(this.packListView_SelectedIndexChanged);
 			this.packListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.packListView_KeyDown);
 			// 
-			// reqImageList
+			// buyPackButton
 			// 
-			this.reqImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-			this.reqImageList.ImageSize = new System.Drawing.Size(94, 130);
-			this.reqImageList.TransparentColor = System.Drawing.Color.Transparent;
+			this.buyPackButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buyPackButton.Location = new System.Drawing.Point(35, 523);
+			this.buyPackButton.Name = "buyPackButton";
+			this.buyPackButton.Size = new System.Drawing.Size(187, 40);
+			this.buyPackButton.TabIndex = 3;
+			this.buyPackButton.Text = "&Buy Req Pack";
+			this.buyPackButton.UseVisualStyleBackColor = true;
+			this.buyPackButton.Visible = false;
+			this.buyPackButton.Click += new System.EventHandler(this.buyPackButton_Click);
+			// 
+			// openPackButton
+			// 
+			this.openPackButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.openPackButton.Location = new System.Drawing.Point(35, 523);
+			this.openPackButton.Name = "openPackButton";
+			this.openPackButton.Size = new System.Drawing.Size(187, 40);
+			this.openPackButton.TabIndex = 2;
+			this.openPackButton.Text = "&Open Req Pack";
+			this.openPackButton.UseVisualStyleBackColor = true;
+			this.openPackButton.Visible = false;
+			this.openPackButton.Click += new System.EventHandler(this.openPackButton_Click);
 			// 
 			// packTypePictureBox
 			// 
@@ -132,7 +146,7 @@
 			this.packTypePictureBox.Name = "packTypePictureBox";
 			this.packTypePictureBox.Size = new System.Drawing.Size(153, 200);
 			this.packTypePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-			this.packTypePictureBox.TabIndex = 2;
+			this.packTypePictureBox.TabIndex = 1;
 			this.packTypePictureBox.TabStop = false;
 			// 
 			// packTreeView
@@ -203,9 +217,9 @@
 			// reqPanel
 			// 
 			this.reqPanel.Controls.Add(this.sellButton);
+			this.reqPanel.Controls.Add(this.unconsumedLabel2);
 			this.reqPanel.Controls.Add(this.unconsumedLabel);
 			this.reqPanel.Controls.Add(this.priceLabel2);
-			this.reqPanel.Controls.Add(this.unconsumedLabel2);
 			this.reqPanel.Controls.Add(this.priceLabel);
 			this.reqPanel.Controls.Add(this.reqFlowLayoutPanel);
 			this.reqPanel.Controls.Add(this.reqPictureBox);
@@ -218,82 +232,95 @@
 			// 
 			// sellButton
 			// 
-			this.sellButton.Location = new System.Drawing.Point(8, 578);
+			this.sellButton.Location = new System.Drawing.Point(8, 598);
 			this.sellButton.Name = "sellButton";
 			this.sellButton.Size = new System.Drawing.Size(187, 40);
-			this.sellButton.TabIndex = 8;
+			this.sellButton.TabIndex = 6;
 			this.sellButton.Text = "&Sell 1 Card";
 			this.sellButton.UseVisualStyleBackColor = true;
 			this.sellButton.Click += new System.EventHandler(this.sellButton_Click);
+			// 
+			// unconsumedLabel2
+			// 
+			this.unconsumedLabel2.AutoSize = true;
+			this.unconsumedLabel2.Location = new System.Drawing.Point(140, 572);
+			this.unconsumedLabel2.Name = "unconsumedLabel2";
+			this.unconsumedLabel2.Size = new System.Drawing.Size(55, 17);
+			this.unconsumedLabel2.TabIndex = 5;
+			this.unconsumedLabel2.Text = "CARDS";
 			// 
 			// unconsumedLabel
 			// 
 			this.unconsumedLabel.AutoSize = true;
 			this.unconsumedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.unconsumedLabel.Location = new System.Drawing.Point(139, 528);
+			this.unconsumedLabel.Location = new System.Drawing.Point(139, 548);
 			this.unconsumedLabel.Name = "unconsumedLabel";
 			this.unconsumedLabel.Size = new System.Drawing.Size(20, 24);
-			this.unconsumedLabel.TabIndex = 6;
+			this.unconsumedLabel.TabIndex = 4;
 			this.unconsumedLabel.Text = "0";
 			// 
 			// priceLabel2
 			// 
 			this.priceLabel2.AutoSize = true;
-			this.priceLabel2.Location = new System.Drawing.Point(9, 552);
+			this.priceLabel2.Location = new System.Drawing.Point(9, 572);
 			this.priceLabel2.Name = "priceLabel2";
 			this.priceLabel2.Size = new System.Drawing.Size(93, 17);
-			this.priceLabel2.TabIndex = 5;
+			this.priceLabel2.TabIndex = 3;
 			this.priceLabel2.Text = "REQ POINTS";
-			// 
-			// unconsumedLabel2
-			// 
-			this.unconsumedLabel2.AutoSize = true;
-			this.unconsumedLabel2.Location = new System.Drawing.Point(140, 552);
-			this.unconsumedLabel2.Name = "unconsumedLabel2";
-			this.unconsumedLabel2.Size = new System.Drawing.Size(55, 17);
-			this.unconsumedLabel2.TabIndex = 7;
-			this.unconsumedLabel2.Text = "CARDS";
 			// 
 			// priceLabel
 			// 
 			this.priceLabel.AutoSize = true;
 			this.priceLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.priceLabel.Location = new System.Drawing.Point(8, 528);
+			this.priceLabel.Location = new System.Drawing.Point(8, 548);
 			this.priceLabel.Name = "priceLabel";
 			this.priceLabel.Size = new System.Drawing.Size(20, 24);
-			this.priceLabel.TabIndex = 4;
+			this.priceLabel.TabIndex = 2;
 			this.priceLabel.Text = "0";
 			// 
 			// reqFlowLayoutPanel
 			// 
+			this.reqFlowLayoutPanel.Controls.Add(this.certificationPictureBox);
 			this.reqFlowLayoutPanel.Controls.Add(this.reqNameLabel);
 			this.reqFlowLayoutPanel.Controls.Add(this.reqDescriptionLabel);
 			this.reqFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this.reqFlowLayoutPanel.Location = new System.Drawing.Point(8, 277);
 			this.reqFlowLayoutPanel.Name = "reqFlowLayoutPanel";
-			this.reqFlowLayoutPanel.Size = new System.Drawing.Size(187, 240);
-			this.reqFlowLayoutPanel.TabIndex = 2;
+			this.reqFlowLayoutPanel.Size = new System.Drawing.Size(187, 260);
+			this.reqFlowLayoutPanel.TabIndex = 1;
 			this.reqFlowLayoutPanel.WrapContents = false;
+			// 
+			// certificationPictureBox
+			// 
+			this.certificationPictureBox.Image = global::Halo5Reqs.Properties.Resources.Certification;
+			this.certificationPictureBox.Location = new System.Drawing.Point(6, 0);
+			this.certificationPictureBox.Margin = new System.Windows.Forms.Padding(6, 0, 6, 6);
+			this.certificationPictureBox.Name = "certificationPictureBox";
+			this.certificationPictureBox.Size = new System.Drawing.Size(15, 20);
+			this.certificationPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.certificationPictureBox.TabIndex = 0;
+			this.certificationPictureBox.TabStop = false;
 			// 
 			// reqNameLabel
 			// 
 			this.reqNameLabel.AutoSize = true;
 			this.reqNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.reqNameLabel.Location = new System.Drawing.Point(0, 0);
+			this.reqNameLabel.Location = new System.Drawing.Point(0, 26);
 			this.reqNameLabel.Margin = new System.Windows.Forms.Padding(0);
 			this.reqNameLabel.Name = "reqNameLabel";
 			this.reqNameLabel.Size = new System.Drawing.Size(65, 24);
-			this.reqNameLabel.TabIndex = 2;
+			this.reqNameLabel.TabIndex = 1;
 			this.reqNameLabel.Text = "Name";
 			// 
 			// reqDescriptionLabel
 			// 
 			this.reqDescriptionLabel.AutoSize = true;
-			this.reqDescriptionLabel.Location = new System.Drawing.Point(0, 24);
+			this.reqDescriptionLabel.Location = new System.Drawing.Point(0, 50);
 			this.reqDescriptionLabel.Margin = new System.Windows.Forms.Padding(0);
 			this.reqDescriptionLabel.Name = "reqDescriptionLabel";
+			this.reqDescriptionLabel.Padding = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.reqDescriptionLabel.Size = new System.Drawing.Size(79, 17);
-			this.reqDescriptionLabel.TabIndex = 3;
+			this.reqDescriptionLabel.TabIndex = 2;
 			this.reqDescriptionLabel.Text = "Description";
 			// 
 			// reqPictureBox
@@ -302,20 +329,8 @@
 			this.reqPictureBox.Name = "reqPictureBox";
 			this.reqPictureBox.Size = new System.Drawing.Size(187, 259);
 			this.reqPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-			this.reqPictureBox.TabIndex = 1;
+			this.reqPictureBox.TabIndex = 0;
 			this.reqPictureBox.TabStop = false;
-			// 
-			// buyPackButton
-			// 
-			this.buyPackButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.buyPackButton.Location = new System.Drawing.Point(35, 523);
-			this.buyPackButton.Name = "buyPackButton";
-			this.buyPackButton.Size = new System.Drawing.Size(187, 40);
-			this.buyPackButton.TabIndex = 10;
-			this.buyPackButton.Text = "&Buy Req Pack";
-			this.buyPackButton.UseVisualStyleBackColor = true;
-			this.buyPackButton.Visible = false;
-			this.buyPackButton.Click += new System.EventHandler(this.buyPackButton_Click);
 			// 
 			// MainForm
 			// 
@@ -336,25 +351,30 @@
 			this.reqPanel.PerformLayout();
 			this.reqFlowLayoutPanel.ResumeLayout(false);
 			this.reqFlowLayoutPanel.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.certificationPictureBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.reqPictureBox)).EndInit();
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
+		private System.Windows.Forms.ImageList reqImageList;
 		private System.Windows.Forms.TabControl tabControl;
 		private System.Windows.Forms.TabPage packsTabPage;
 		private System.Windows.Forms.TreeView packTreeView;
+		private System.Windows.Forms.PictureBox packTypePictureBox;
+		private System.Windows.Forms.Button openPackButton;
+		private System.Windows.Forms.Button buyPackButton;
 		private System.Windows.Forms.ListView packListView;
 		private System.Windows.Forms.TabPage reqsTabPage;
 		private System.Windows.Forms.TreeView reqTreeView;
 		private System.Windows.Forms.ListView reqListView;
-		private System.Windows.Forms.ImageList reqImageList;
 		private System.Windows.Forms.ColumnHeader reqNameColumnHeader;
 		private System.Windows.Forms.ColumnHeader reqRarityColumnHeader;
 		private System.Windows.Forms.Panel reqPanel;
 		private System.Windows.Forms.PictureBox reqPictureBox;
 		private System.Windows.Forms.FlowLayoutPanel reqFlowLayoutPanel;
+		private System.Windows.Forms.PictureBox certificationPictureBox;
 		private System.Windows.Forms.Label reqNameLabel;
 		private System.Windows.Forms.Label reqDescriptionLabel;
 		private System.Windows.Forms.Label priceLabel;
@@ -362,9 +382,6 @@
 		private System.Windows.Forms.Label unconsumedLabel;
 		private System.Windows.Forms.Label unconsumedLabel2;
 		private System.Windows.Forms.Button sellButton;
-		private System.Windows.Forms.PictureBox packTypePictureBox;
-		private System.Windows.Forms.Button openPackButton;
-		private System.Windows.Forms.Button buyPackButton;
 	}
 }
 
