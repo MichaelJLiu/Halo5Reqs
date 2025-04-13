@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Halo5Reqs.Api;
 
 using Microsoft.Web.WebView2.Core;
+using Newtonsoft.Json.Linq;
 
 namespace Halo5Reqs
 {
@@ -45,6 +46,13 @@ namespace Halo5Reqs
 					_logger.Log($"X-343-Authorization-Spartan: {token}");
 					_logger.Log("");
 					String gamertag = await new ProfileApiClient(token).GetGamertag();
+
+					if (gamertag == null)
+					{
+						String gamertagJson = await this.webView.ExecuteScriptAsync("__NEXT_DATA__.props.auth.gamertag");
+						gamertag = (String)((JValue)JToken.Parse(gamertagJson)).Value;
+					}
+
 					this.MainForm = new MainForm(_logger, token, gamertag);
 					this.MainForm.Show();
 					this.MainForm.Focus();

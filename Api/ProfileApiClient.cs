@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json.Linq;
@@ -14,7 +15,17 @@ namespace Halo5Reqs.Api
 
 		public async Task<String> GetGamertag()
 		{
-			JObject userData = await this.HttpClient.GetJObjectAsync("/users/me");
+			JObject userData;
+
+			try
+			{
+				userData = await this.HttpClient.GetJObjectAsync("/users/me");
+			}
+			catch (HttpRequestException)
+			{
+				return null;
+			}
+
 			return (String)userData["gamertag"];
 		}
 	}
