@@ -14,11 +14,11 @@ namespace Halo5Reqs
 {
 	public partial class MainForm : Form
 	{
-		private const int LVIS_CUT = 4;
-		private const int LVIS_OVERLAYMASK = 0xF00;
+		private const Int32 LVIS_CUT = 4;
+		private const Int32 LVIS_OVERLAYMASK = 0xF00;
 
 		[DllImport("ComCtl32.dll")]
-		private static extern int ImageList_SetOverlayImage(IntPtr himl, int iImage, int iOverlay);
+		private static extern Int32 ImageList_SetOverlayImage(IntPtr himl, Int32 iImage, Int32 iOverlay);
 
 		private static readonly MethodInfo s_listViewSetItemState =
 			typeof(ListView).GetMethod("SetItemState", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -292,11 +292,7 @@ namespace Halo5Reqs
 						this.SetCutStyle(this.packListView, item);
 					}
 
-					this.SetOverlayImage(
-						this.packListView, item,
-						card.Unconsumed > _settings.MinReqCount
-							? Math.Min(card.Unconsumed, 10)
-							: 0);
+					this.SetOverlayImage(this.packListView, item, this.GetOverlayImageIndex(req, card));
 				}
 			}
 
@@ -304,18 +300,11 @@ namespace Halo5Reqs
 			{
 				if (item.Tag == req)
 				{
-					if (card.Unconsumed > _settings.MinReqCount)
-					{
-						this.SetOverlayImage(this.reqListView, item, Math.Min(card.Unconsumed, 10));
-					}
-					else
-					{
-						this.SetOverlayImage(this.reqListView, item, 0);
+					this.SetOverlayImage(this.reqListView, item, this.GetOverlayImageIndex(req, card));
 
-						if (card.Unconsumed == 0)
-						{
-							this.SetCutStyle(this.reqListView, item);
-						}
+					if (card.Unconsumed == 0)
+					{
+						this.SetCutStyle(this.reqListView, item);
 					}
 
 					break;
@@ -346,8 +335,9 @@ namespace Halo5Reqs
 			Font font = this.reqListView.Font;
 			Size bitmapSize = this.reqImageList.ImageSize;
 
-			for (Int32 index = 2; index <= 10; index++)
+			for (Int32 index = 1; index <= 10; index++)
 			{
+				Boolean hasExtra = index > _settings.MinReqCount;
 				String text = index < 10 ? $"x{index}" : "x9+";
 				Bitmap bitmap = new Bitmap(bitmapSize.Width, bitmapSize.Height);
 
@@ -357,8 +347,10 @@ namespace Halo5Reqs
 					Single x = bitmapSize.Width - textSize.Width - 2;
 					Single y = bitmapSize.Height - textSize.Height - 2;
 					g.DrawRectangle(Pens.Black, x, y, textSize.Width + 1, textSize.Height + 1);
-					g.FillRectangle(Brushes.Gold, x + 1, y + 1, textSize.Width, textSize.Height);
-					g.DrawString(text, font, Brushes.Black, x + 2, y + 1);
+					g.FillRectangle(
+						hasExtra ? Brushes.Gold : Brushes.Red,
+						x + 1, y + 1, textSize.Width, textSize.Height);
+					g.DrawString(text, font, hasExtra ? Brushes.Black : Brushes.White, x + 2, y + 1);
 				}
 
 				this.reqImageList.Images.Add(text, bitmap);
@@ -428,10 +420,9 @@ namespace Halo5Reqs
 						this.SetCutStyle(this.packListView, item);
 					}
 
-					if (_cardsByReqId.TryGetValue(req.Id, out Card card) &&
-						card.Unconsumed > _settings.MinReqCount)
+					if (_cardsByReqId.TryGetValue(req.Id, out Card card))
 					{
-						this.SetOverlayImage(this.packListView, item, Math.Min(card.Unconsumed, 10));
+						this.SetOverlayImage(this.packListView, item, this.GetOverlayImageIndex(req, card));
 					}
 
 					if (this.reqImageList.Images.ContainsKey(req.Id))
@@ -534,10 +525,7 @@ namespace Halo5Reqs
 
 					if (_cardsByReqId.TryGetValue(req.Id, out Card card))
 					{
-						if (card.Unconsumed > _settings.MinReqCount)
-						{
-							this.SetOverlayImage(this.reqListView, item, Math.Min(card.Unconsumed, 10));
-						}
+						this.SetOverlayImage(this.reqListView, item, this.GetOverlayImageIndex(req, card));
 					}
 					else
 					{
@@ -658,15 +646,22 @@ namespace Halo5Reqs
 			}
 		}
 
+		private Int32 GetOverlayImageIndex(Req req, Card card)
+		{
+			return req.SellPrice == null || card.Unconsumed == _settings.MinReqCount
+				? 0
+				: Math.Min(card.Unconsumed, 10);
+		}
+
 		private void SetCutStyle(ListView listView, ListViewItem item)
 		{
 			item.ForeColor = Color.Gray;
-			s_listViewSetItemState.Invoke(listView, new object[] { item.Index, LVIS_CUT, LVIS_CUT });
+			s_listViewSetItemState.Invoke(listView, new Object[] { item.Index, LVIS_CUT, LVIS_CUT });
 		}
 
 		private void SetOverlayImage(ListView listView, ListViewItem item, Int32 imageIndex)
 		{
-			s_listViewSetItemState.Invoke(listView, new object[] { item.Index, imageIndex << 8, LVIS_OVERLAYMASK });
+			s_listViewSetItemState.Invoke(listView, new Object[] { item.Index, imageIndex << 8, LVIS_OVERLAYMASK });
 		}
 	}
 }
